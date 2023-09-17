@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,20 +11,20 @@ public class TopDownContactEnemyController : TopDownEnemyController
     [SerializeField] private SpriteRenderer characterRendere;
 
     private HealthSystem healthSystem;
-    private HealthSystem _collidingTargetHealthSystme;
+    private HealthSystem _collidingTargetHealthSystem;
     private TopDownMovement _collidingMovement;
 
     protected override void Start()
     {
         base.Start();
+
         healthSystem = GetComponent<HealthSystem>();
-        healthSystem.OnDamage += OnDamage();
+        healthSystem.OnDamage += OnDamage;
     }
 
-    private Action OnDamage()
+    private void OnDamage()
     {
         followRange = 100f;
-        return null;
     }
 
     protected override void FixedUpdate()
@@ -62,8 +61,8 @@ public class TopDownContactEnemyController : TopDownEnemyController
             return;
         }
 
-        _collidingTargetHealthSystme = receiver.GetComponent<HealthSystem>();
-        if(_collidingTargetHealthSystme != null)
+        _collidingTargetHealthSystem = receiver.GetComponent<HealthSystem>();
+        if(_collidingTargetHealthSystem != null)
         {
             _isCollidingWithTarget = true;
         }
@@ -84,7 +83,7 @@ public class TopDownContactEnemyController : TopDownEnemyController
     private void ApplyHealthChange()
     {
         AttackSO attackSO = Stats.CurrentStats.attackSO;
-        bool hasBeenChanged = _collidingTargetHealthSystme.ChangeHealth(-attackSO.power);
+        bool hasBeenChanged = _collidingTargetHealthSystem.ChangeHealth(-attackSO.power);
         if(attackSO.isOnKnockBack && _collidingMovement != null)
         {
             _collidingMovement.ApplyKnockBack(transform, attackSO.knockBackPower, attackSO.knockBackTime);
